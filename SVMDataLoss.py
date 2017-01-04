@@ -6,7 +6,8 @@ def L_i(x, y, W):
   - y is an integer giving index of correct class (e.g. between 0 and 9 in CIFAR-10)
   - W is the weight matrix (e.g. 10 x 3073 in CIFAR-10)
   """
-  delta = 1.0 # see notes about delta later in this section
+  #NB: altered delta from 1 to 10 for testing
+  delta = 10.0 # see notes about delta later in this section
   scores = W.dot(x) # scores becomes of size 10 x 1, the scores for each class
   correct_class_score = scores[y]
   D = W.shape[0] # number of classes, e.g. 10
