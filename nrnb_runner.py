@@ -1,5 +1,6 @@
 import data_utils as du
 import NearestNeighbour as nb
+import numpy as np
 
 Xtr, Ytr, Xte, Yte = du.load_CIFAR10('datasets/cifar-10-batches-py/')
 
