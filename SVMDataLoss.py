@@ -1,4 +1,6 @@
-def L_i(x, y, W):
+#see https://github.com/bruceoutdoors/CS231n/blob/master/assignment1/cs231n/classifiers/linear_svm.py
+
+def L_i(x, y, W, delta=1):
   """
   unvectorized version. Compute the multiclass svm loss for a single example (x,y)
   - x is a column vector representing an image (e.g. 3073 x 1 in CIFAR-10)
@@ -7,7 +9,7 @@ def L_i(x, y, W):
   - W is the weight matrix (e.g. 10 x 3073 in CIFAR-10)
   """
   #NB: altered delta from 1 to 10 for testing
-  delta = 10.0 # see notes about delta later in this section
+  #delta = 10.0 # see notes about delta later in this section
   scores = W.dot(x) # scores becomes of size 10 x 1, the scores for each class
   correct_class_score = scores[y]
   D = W.shape[0] # number of classes, e.g. 10

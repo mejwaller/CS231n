@@ -21,6 +21,6 @@ class myTest(unittest.TestCase):
     #check loss for this example is 8    
     def testL_i(self): 
         expected = 8
-        self.failUnless(SVMDataLoss.L_i(self.xtest,0,self.Wtest)==8)  
+        self.failUnless(SVMDataLoss.L_i(self.xtest,0,self.Wtest,10)==8)  
         
 if __name__ == '__main__': unittest.main()
