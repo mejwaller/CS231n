@@ -61,59 +61,9 @@ class PreProcCifar10:
         mask = np.random.choice(num_training, num_dev, replace=False)
         self.X_dev = self.X_train[mask]
         self.y_dev = self.y_train[mask]
-
-        # We use the first num_test points of the original test set as our
-        # test set.
-        mask = range(num_test)
-        self.X_test = self.X_test[mask]
-        self.y_test = self.y_test[mask]
         
-        print 'Train data shape: ', self.X_train.shape
-        print 'Train labels shape: ', self.y_train.shape
-        print 'Validation data shape: ', self.X_val.shape
-        print 'Validation labels shape: ', self.y_val.shape
-        print 'Test data shape: ', self.X_test.shape
-        print 'Test labels shape: ', self.y_test.shape
-        
-        # Preprocessing: reshape the image data into rows
-        self.X_train = np.reshape(self.X_train, (self.X_train.shape[0], -1))
-        self.X_val = np.reshape(self.X_val, (self.X_val.shape[0], -1))
-        self.X_test = np.reshape(self.X_test, (self.X_test.shape[0], -1))
-        self.X_dev = np.reshape(self.X_dev, (self.X_dev.shape[0], -1))
-        
-        # As a sanity check, print out the shapes of the data
-        print 'Training data shape: ', self.X_train.shape
-        print 'Validation data shape: ', self.X_val.shape
-        print 'Test data shape: ', self.X_test.shape
-        print 'dev data shape: ', self.X_dev.shape
-        
-        # Preprocessing: subtract the mean image
-        # first: compute the image mean based on the training data
-        mean_image = np.mean(self.X_train, axis=0)
-        print mean_image[:10] # print a few of the elements
-        plt.figure(figsize=(4,4))
-        plt.imshow(mean_image.reshape((32,32,3)).astype('uint8')) # visualize the mean image
-        plt.show()
-        
-        # second: subtract the mean image from train and test data
-        self.X_train -= mean_image
-        self.X_val -= mean_image
-        self.X_test -= mean_image
-        self.X_dev -= mean_image
-        
-        # third: append the bias dimension of ones (i.e. bias trick) so that our SVM
-        # only has to worry about optimizing a single weight matrix W.
-        self.X_train = np.hstack([self.X_train, np.ones((self.X_train.shape[0], 1))])
-        self.X_val = np.hstack([self.X_val, np.ones((self.X_val.shape[0], 1))])
-        self.X_test = np.hstack([self.X_test, np.ones((self.X_test.shape[0], 1))])
-        self.X_dev = np.hstack([self.X_dev, np.ones((self.X_dev.shape[0], 1))])
-
-        print self.X_train.shape, self.X_val.shape, self.X_test.shape, self.X_dev.shape
-        
-     #need to run preProcess() function above first   
-    def fixedDevSet(self):
-        
-        mask = array([1566, 3627, 4236, 2143, 1696, 4143, 1358, 3037, 2812, 1261, 1146,
+        # Make a fixed dev set too so that we can reproduce results for tests
+        mask = [1566, 3627, 4236, 2143, 1696, 4143, 1358, 3037, 2812, 1261, 1146,
        4403, 3571, 4294, 1787, 1650, 2224,  295, 2808, 1834, 3637, 2422,
         346, 1760,  706, 4562,  700, 3969, 3181,  592, 2720, 1708,  211,
        2869, 1310, 2155, 1743, 4583, 4428, 1249, 1961, 2148,  870, 3596,
@@ -158,14 +108,65 @@ class PreProcCifar10:
        4306, 4318, 3114, 4884, 4205, 3232,  694, 1984, 1978, 4328, 2725,
        1091, 2843,  288, 2961, 2001, 1374, 3206, 3384, 3460, 3600, 2991,
        2479, 4866,  197, 2633, 2770, 4408,  467, 2240, 3564, 3346, 3211,
-       3695, 4393, 2996, 2472, 1491])
+       3695, 4393, 2996, 2472, 1491]
        
         self.fixedX_dev = self.X_train[mask]
         self.fixedy_dev = self.y_train[mask]
-       
-       
 
+        # We use the first num_test points of the original test set as our
+        # test set.
+        mask = range(num_test)
+        self.X_test = self.X_test[mask]
+        self.y_test = self.y_test[mask]
         
+        print 'Train data shape: ', self.X_train.shape
+        print 'Train labels shape: ', self.y_train.shape
+        print 'Validation data shape: ', self.X_val.shape
+        print 'Validation labels shape: ', self.y_val.shape
+        print 'Test data shape: ', self.X_test.shape
+        print 'Test labels shape: ', self.y_test.shape
+        
+        # Preprocessing: reshape the image data into rows
+        self.X_train = np.reshape(self.X_train, (self.X_train.shape[0], -1))
+        self.X_val = np.reshape(self.X_val, (self.X_val.shape[0], -1))
+        self.X_test = np.reshape(self.X_test, (self.X_test.shape[0], -1))
+        self.X_dev = np.reshape(self.X_dev, (self.X_dev.shape[0], -1))
+        self.fixedX_dev = np.reshape(self.fixedX_dev, (self.fixedX_dev.shape[0], -1))
+        
+        # As a sanity check, print out the shapes of the data
+        print 'Training data shape: ', self.X_train.shape
+        print 'Validation data shape: ', self.X_val.shape
+        print 'Test data shape: ', self.X_test.shape
+        print 'dev data shape: ', self.X_dev.shape
+        print 'fixed dev data shape: ', self.fixedX_dev.shape
+        
+        # Preprocessing: subtract the mean image
+        # first: compute the image mean based on the training data
+        mean_image = np.mean(self.X_train, axis=0)
+        print mean_image[:10] # print a few of the elements
+        plt.figure(figsize=(4,4))
+        plt.imshow(mean_image.reshape((32,32,3)).astype('uint8')) # visualize the mean image
+        plt.show()
+        
+        # second: subtract the mean image from train and test data
+        self.X_train -= mean_image
+        self.X_val -= mean_image
+        self.X_test -= mean_image
+        self.X_dev -= mean_image
+        self.fixedX_dev -= mean_image
+        
+        # third: append the bias dimension of ones (i.e. bias trick) so that our SVM
+        # only has to worry about optimizing a single weight matrix W.
+        self.X_train = np.hstack([self.X_train, np.ones((self.X_train.shape[0], 1))])
+        self.X_val = np.hstack([self.X_val, np.ones((self.X_val.shape[0], 1))])
+        self.X_test = np.hstack([self.X_test, np.ones((self.X_test.shape[0], 1))])
+        self.X_dev = np.hstack([self.X_dev, np.ones((self.X_dev.shape[0], 1))])
+        self.fixedX_dev = np.hstack([self.fixedX_dev, np.ones((self.fixedX_dev.shape[0], 1))])
+
+
+        print self.X_train.shape, self.X_val.shape, self.X_test.shape, self.X_dev.shape, self.fixedX_dev.shape
+        
+       
 #pp = PreProcCifar10()
 
 #pp.sanity()

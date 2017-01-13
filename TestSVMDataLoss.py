@@ -8,8 +8,9 @@ class myTest(unittest.TestCase):
     def setUp(self):
         xs=[13,-7,11,1]
         self.xtest=np.array(xs)
-        Ws=[[1,0,0,0],[0,1,0,0],[0,0,1,0]]
-        self.Wtest = np.array(Ws)
+        #Ws=[[1,0,0,0],[0,1,0,0],[0,0,1,0]]
+        #self.Wtest = np.array(Ws)
+        self.Wtest = np.eye(3,4)
         self.thing=6
     
     #check our test Wx is correct   
