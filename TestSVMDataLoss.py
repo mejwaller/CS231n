@@ -29,13 +29,15 @@ class myTest(unittest.TestCase):
         self.failUnless(SVMDataLoss.L_i(self.xtest,0,self.Wtest,10)==8)  
         
     def testunvectorizedL_ifortestset(self):#get loss for first image of preprocessor fixed dev set
-        print SVMDataLoss.L_i(self.pp.fixedX_dev[1],self.pp.fixedy_dev[1], self.Wpreproc)   
+        print 
+        self.failUnless(np.isclose(SVMDataLoss.L_i(self.pp.fixedX_dev[1],self.pp.fixedy_dev[1], self.Wpreproc), 144.886612245))
         
     def testunvectorisedL_iforFullTestSet(self):# get total loss               
         score = 0;
         for i in xrange(500):
             score+=SVMDataLoss.L_i(self.pp.fixedX_dev[i], self.pp.fixedy_dev[i],self.Wpreproc)
-        print score
+        self.failUnless(np.isclose(score,108097.158163))
+        
     
         
 if __name__ == '__main__': unittest.main()
