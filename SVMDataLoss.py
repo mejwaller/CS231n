@@ -1,5 +1,7 @@
 #see https://github.com/bruceoutdoors/CS231n/blob/master/assignment1/cs231n/classifiers/linear_svm.py
 
+import numpy as np
+
 def L_i(x, y, W, delta=1):
   """
   unvectorized version. Compute the multiclass svm loss for a single example (x,y)
@@ -21,4 +23,21 @@ def L_i(x, y, W, delta=1):
     # accumulate loss for the i-th example
     loss_i += max(0, scores[j] - correct_class_score + delta)
   return loss_i
+  
+def L_i_vectorized(x, y, W, delta = 1):
+    """
+    A faster half-vectorized implementation. half-vectorized
+    refers to the fact that for a single example the implementation contains
+    no for loops, but there is still one loop over the examples (outside this function)
+    """
+    scores = W.dot(x)
+    # compute the margins for all classes in one vector operation
+    margins = np.maximum(0, scores - scores[y] + delta)
+    # on y-th position scores[y] - scores[y] canceled and gave delta. We want
+    # to ignore the y-th position and only consider margin on max wrong class
+    margins[y] = 0
+    loss_i = np.sum(margins)
+    return loss_i
+
+    
 
