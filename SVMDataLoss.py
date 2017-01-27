@@ -39,5 +39,19 @@ def L_i_vectorized(x, y, W, delta = 1):
     loss_i = np.sum(margins)
     return loss_i
 
+def SVM_loss(X,y,W, delta=1):
+    """
+    fully-vectorized implementation :
+    - X holds all the training examples as columns (e.g. 3073 x 50,000 in CIFAR-10)
+    - y is array of integers specifying correct class (e.g. 50,000-D array)
+    - W are weights (e.g. 10 x 3073)
+    """
+    pass
     
+def regL2norm(W,reg):
+    """ 
+    sum up the squared elements of W
+    multiply by reg, the regularization constant
+    """
+    return reg*np.sum(W*W)
 

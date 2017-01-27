@@ -4,7 +4,7 @@ from cifar10_preproc import PreProcCifar10 as preproc
 import time
 
 class myTest(unittest.TestCase):
-    
+     
     #see http://cs231n.github.io/linear-classify/ 
     #(section Multiclass Support Vector Machine loss)  
     def setUp(self):    
@@ -45,19 +45,25 @@ class myTest(unittest.TestCase):
         tic = time.time()
         for i in xrange(500):
             score+=SVMDataLoss.L_i(self.pp.fixedX_dev[i], self.pp.fixedy_dev[i],self.Wpreproc)
+        score/=500 
+        score+=SVMDataLoss.regL2norm(self.Wpreproc,1.)   
         toc = time.time()
         print "Unvectorized took %fs" % (toc -tic)
-        self.failUnless(np.isclose(score,108097.158163))
- 
+        #self.failUnless(np.isclose(score,108097.158163))
+        self.failUnless(np.isclose(score,256.1943126326))
+  
         
     def testVectorisedL_iforFullTestSet(self):# get total loss               
         score = 0;
         tic = time.time()
         for i in xrange(500):
             score+=SVMDataLoss.L_i_vectorized(self.pp.fixedX_dev[i], self.pp.fixedy_dev[i],self.Wpreproc)
+        score/=500 
+        score+=SVMDataLoss.regL2norm(self.Wpreproc,1.) 
         toc = time.time()
         print "Semi-vectorized took %fs" % (toc -tic)
-        self.failUnless(np.isclose(score,108097.158163))
+        #self.failUnless(np.isclose(score,108097.158163))
+        self.failUnless(np.isclose(score,256.1943126326))
        
     
         
