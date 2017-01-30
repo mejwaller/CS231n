@@ -14,14 +14,14 @@ class myTest(unittest.TestCase):
         self.xtest=np.array(xs)
         #Ws=[[1,0,0,0],[0,1,0,0],[0,0,1,0]]
         #self.Wtest = np.array(Ws)
-        self.Wtest = np.eye(3,4)
+        self.Wtest = np.eye(4,3)
         self.thing=6
-        self.Wpreproc = np.eye(10,3073)*2
+        self.Wpreproc = np.eye(3073,10)*2
     
     #check our test Wx is correct   
     def testWdotx(self):
         expected=np.array([13,-7,11])
-        res = self.Wtest.dot(self.xtest)
+        res = self.xtest.dot(self.Wtest)
         self.failUnless(np.array_equal(expected,res))    
         
     #check loss for this example is 8    
@@ -63,6 +63,14 @@ class myTest(unittest.TestCase):
         toc = time.time()
         print "Semi-vectorized took %fs" % (toc -tic)
         #self.failUnless(np.isclose(score,108097.158163))
+        self.failUnless(np.isclose(score,256.1943126326))
+        
+    def testFullvectorizedLforFullTestSet(self):
+        score = 0;
+        tic=time.time()
+        score=SVMDataLoss.SVM_loss(self.pp.fixedX_dev,self.pp.fixedy_dev,self.Wpreproc)
+        toc=time.time()
+        print "fully vectorized took %fs" % (toc-tic)
         self.failUnless(np.isclose(score,256.1943126326))
        
     
