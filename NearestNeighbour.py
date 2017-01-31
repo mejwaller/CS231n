@@ -20,6 +20,7 @@ class NearestNeighbour(object):
             # find the nearest training image to the 'i'th test image
             # using the L1 distance (sum of abolute value differences)
             distances = np.sum(np.abs(self.Xtr-X[i,:]), axis =1)
+            #distances = np.sum(np.square(self.Xtr-X[i,:]), axis =1)
             min_index = np.argmin(distances) # get the index with the smallest distance
             Ypred[i] = self.ytr[min_index] # predict the label of the nearest example
             print 'Done row %d' % (i)
