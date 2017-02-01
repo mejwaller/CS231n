@@ -1,4 +1,4 @@
-import unittest, SVMDataLoss
+import unittest, SoftmaxDataLoss
 import numpy as np
 from cifar10_preproc import PreProcCifar10 as preproc 
 import time
@@ -12,7 +12,17 @@ class SoftmaxTest(unittest.TestCase):
         self.pp.preProcess()
         #setup toy W and x (augmented with b) - data from link above        
         self.xtoy=np.array([-15,22,-44,56,1])
-        Wtoy = np.array([[0.01,-0.05,0.1,0.05,0.0],[0.7,0.2,0.05,0.16,0.2],[0.0,-0.45,-0.2,0.03,-0.3]]).transpose()
-        self.Wpreproc = np.eye(3073,10)*2
+        self.Wtoy = np.array([[0.01,-0.05,0.1,0.05,0.0],[0.7,0.2,0.05,0.16,0.2],[0.0,-0.45,-0.2,0.03,-0.3]]).transpose()
+        self.Wpreproc = np.eye(3073,10)*2      
+        
+    def testLi_unvec(self):
+        score = SoftmaxDataLoss.Li_unvec(self.xtoy,2,self.Wtoy)
+        print "Score is %f" % score
+        self.failUnless(np.isclose(score,-1.0401905694301092))
+        
+if __name__ == '__main__': unittest.main()
+        
+        
+    
     
     
