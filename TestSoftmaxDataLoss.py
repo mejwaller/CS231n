@@ -1,4 +1,4 @@
-import unittest, SoftmaxDataLoss
+import unittest, SoftmaxDataLoss, SVMDataLoss
 import numpy as np
 from cifar10_preproc import PreProcCifar10 as preproc 
 import time
@@ -19,6 +19,20 @@ class SoftmaxTest(unittest.TestCase):
         score = SoftmaxDataLoss.Li_unvec(self.xtoy,2,self.Wtoy)
         print "Score is %f" % score
         self.failUnless(np.isclose(score,-1.0401905694301092))
+        
+    def testLi_unvecFulldevset(self):
+        score = 0;
+        tic = time.time()
+        for i in xrange(500):
+            score+=SoftmaxDataLoss.Li_unvec(self.pp.fixedX_dev[i], self.pp.fixedy_dev[i],self.Wpreproc)
+        score/=500 
+        score+=SVMDataLoss.regL2norm(self.Wpreproc,1.)   
+        toc = time.time()
+        print "Unvectorized took %fs" % (toc -tic)
+        #self.failUnless(np.isclose(score,108097.158163))
+        self.failUnless(np.isclose(score,-14.196695982479078
+))
+        pass
         
 if __name__ == '__main__': unittest.main()
         
