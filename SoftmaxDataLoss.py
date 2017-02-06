@@ -7,3 +7,8 @@ def Li_unvec(x,y,W):
     p = np.exp(scores)/np.sum(np.exp(scores))
     loss_i = np.log(p[y]) #p[y] are the 'correct' class scores
     return loss_i
+    
+def SoftmaxLoss(X,y,W):
+    scores = X.dot(W)
+    pass
+    
