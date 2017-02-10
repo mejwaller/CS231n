@@ -34,10 +34,11 @@ class SoftmaxTest(unittest.TestCase):
     def testLVec(self):
         score = 0;
         tic = time.time()
-        SoftmaxDataLoss.SoftmaxLoss(self.pp.fixedX_dev, self.pp.fixedy_dev,self.Wpreproc)
-        score/=500 
-        score+=SVMDataLoss.regL2norm(self.Wpreproc,1.)   
+        score=SoftmaxDataLoss.SoftmaxLoss(self.pp.fixedX_dev, self.pp.fixedy_dev,self.Wpreproc)
+        #score/=500 
+        #score+=SVMDataLoss.regL2norm(self.Wpreproc,1.)   
         toc = time.time()
+        print "VECTORIZED Score is %f" % score
         print "Vectorized softmax took %fs" % (toc -tic)        
         self.failUnless(np.isclose(score,-14.196695982479078))
         
