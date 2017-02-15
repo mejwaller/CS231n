@@ -38,9 +38,7 @@ def svm_loss_fun(W):
     SVMDataLoss.SVM_loss(pp.X_train,pp.y_train,W)
     
 
-W = np.random.rand(3073, 10) * 0.001 # random weight vector
 
-df = numerical_grad(svm_loss_fun,W)
 
 
     
