@@ -27,6 +27,7 @@ def numerical_grad(f, x, h=0.00001):
     
         # compute the partial derivative
         grad[ix] = (fxplush - fxminush) / (2*h) # the slope
+        print ix, grad[ix]
         it.iternext() # step to next dimension
 
     return grad
@@ -35,7 +36,8 @@ pp = preproc()
 pp.preProcess()
 
 def svm_loss_fun(W):
-    SVMDataLoss.SVM_loss(pp.X_train,pp.y_train,W)
+    #return SVMDataLoss.SVM_loss(pp.X_train,pp.y_train,W)
+    return SVMDataLoss.SVM_loss(pp.X_dev,pp.y_dev,W)
     
 
 
