@@ -35,7 +35,8 @@ class myTest(unittest.TestCase):
         self.failUnless(SVMDataLoss.L_i_vectorized(self.xtest,0,self.Wtest,10)==expected) 
         
     def testunvectorizedL_ifortestset(self):#get loss for first image of preprocessor fixed dev set
-           self.failUnless(np.isclose(SVMDataLoss.L_i(self.pp.fixedX_dev[1],self.pp.fixedy_dev[1], self.Wpreproc), 144.886612245))
+        loss=SVMDataLoss.L_i(self.pp.fixedX_dev[1],self.pp.fixedy_dev[1], self.Wpreproc)            
+        self.failUnless(np.isclose(loss, 144.886612245))
  
     def testVectorizedL_ifortestset(self):#get loss for first image of preprocessor fixed dev set
            self.failUnless(np.isclose(SVMDataLoss.L_i_vectorized(self.pp.fixedX_dev[1],self.pp.fixedy_dev[1], self.Wpreproc), 144.886612245))
@@ -48,9 +49,9 @@ class myTest(unittest.TestCase):
         score/=500 
         score+=SVMDataLoss.regL2norm(self.Wpreproc,1.)   
         toc = time.time()
-        print "Unvectorized took %fs" % (toc -tic)
+        print "Unvectorized took %fs" % (toc -tic)       
         #self.failUnless(np.isclose(score,108097.158163))
-        self.failUnless(np.isclose(score,256.1943126326))
+        self.failUnless(np.isclose(score,236.194316327))
   
         
     def testVectorisedL_iforFullTestSet(self):# get total loss               
@@ -63,7 +64,7 @@ class myTest(unittest.TestCase):
         toc = time.time()
         print "Semi-vectorized took %fs" % (toc -tic)
         #self.failUnless(np.isclose(score,108097.158163))
-        self.failUnless(np.isclose(score,256.1943126326))
+        self.failUnless(np.isclose(score,236.194316327))
         
     def testFullvectorizedLforFullTestSet(self):
         score = 0;
@@ -71,7 +72,7 @@ class myTest(unittest.TestCase):
         score=SVMDataLoss.SVM_loss(self.pp.fixedX_dev,self.pp.fixedy_dev,self.Wpreproc)
         toc=time.time()
         print "fully vectorized took %fs" % (toc-tic)
-        self.failUnless(np.isclose(score,256.1943126326))
+        self.failUnless(np.isclose(score,236.194316327))
        
     
         

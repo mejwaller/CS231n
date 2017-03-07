@@ -60,5 +60,5 @@ def regL2norm(W,reg):
     sum up the squared elements of W
     multiply by reg, the regularization constant
     """
-    return reg*np.sum(W*W)
+    return 0.5*reg*np.sum(W*W)
 
