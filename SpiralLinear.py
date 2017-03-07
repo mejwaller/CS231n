@@ -3,9 +3,9 @@ import SoftmaxDataLoss as sm
 import numpy as np
 import matplotlib.pyplot as plt
 
-n= 100
-k= 3
-d = 2
+n= 100#number of samples
+k= 3#number of classes
+d = 2#dimensionality
 
 sp = SpiralDataSet.spiralDataSet()
 sp.generateData(n,k,d)
