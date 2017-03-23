@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 from TwoLayerNN import TwoLayerNN
 
+from gradient_check import eval_numerical_gradient
+
 plt.rcParams['figure.figsize'] = (10.0, 8.0) # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
 plt.rcParams['image.cmap'] = 'gray'
@@ -57,3 +59,31 @@ correct_loss = 1.30378789133
 # should be very small, we get < 1e-12
 print 'Difference between your loss and correct loss:'
 print np.sum(np.abs(loss - correct_loss))
+
+# Use numeric gradient checking to check your implementation of the backward pass.
+# If your implementation is correct, the difference between the numeric and
+# analytic gradients should be less than 1e-8 for each of W1, W2, b1, and b2.
+
+loss, grads = net.loss(X, y, reg=0.1)
+
+# these should all be less than 1e-8 or so
+for param_name in grads:
+  f = lambda W: net.loss(X, y, reg=0.1)[0]
+  param_grad_num = eval_numerical_gradient(f, net.params[param_name], verbose=False)
+  print '%s max relative error: %e' % (param_name, rel_error(param_grad_num, grads[param_name]))
+  
+
+#train toy model
+net = init_toy_model()
+stats = net.train(X, y, X, y,
+            learning_rate=1e-1, reg=1e-5,
+            num_iters=100, verbose=False)
+
+print 'Final training loss: ', stats['loss_history'][-1]
+
+# plot the loss history
+plt.plot(stats['loss_history'])
+plt.xlabel('iteration')
+plt.ylabel('training loss')
+plt.title('Training Loss history')
+plt.show()
