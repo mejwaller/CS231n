@@ -157,11 +157,11 @@ class PreProcCifar10:
         
         # third: append the bias dimension of ones (i.e. bias trick) so that our SVM
         # only has to worry about optimizing a single weight matrix W.
-        self.X_train = np.hstack([self.X_train, np.ones((self.X_train.shape[0], 1))])
-        self.X_val = np.hstack([self.X_val, np.ones((self.X_val.shape[0], 1))])
-        self.X_test = np.hstack([self.X_test, np.ones((self.X_test.shape[0], 1))])
-        self.X_dev = np.hstack([self.X_dev, np.ones((self.X_dev.shape[0], 1))])
-        self.fixedX_dev = np.hstack([self.fixedX_dev, np.ones((self.fixedX_dev.shape[0], 1))])
+        #self.X_train = np.hstack([self.X_train, np.ones((self.X_train.shape[0], 1))])
+        #self.X_val = np.hstack([self.X_val, np.ones((self.X_val.shape[0], 1))])
+        #self.X_test = np.hstack([self.X_test, np.ones((self.X_test.shape[0], 1))])
+        #self.X_dev = np.hstack([self.X_dev, np.ones((self.X_dev.shape[0], 1))])
+        #self.fixedX_dev = np.hstack([self.fixedX_dev, np.ones((self.fixedX_dev.shape[0], 1))])
 
         print self.X_train.shape, self.X_val.shape, self.X_test.shape, self.X_dev.shape, self.fixedX_dev.shape
         

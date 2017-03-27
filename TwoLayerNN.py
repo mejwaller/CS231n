@@ -1,10 +1,11 @@
 #heavily plagiarised from https://github.com/bruceoutdoors/CS231n/blob/master/assignment1/cs231n/classifiers/neural_net.py
 
 import numpy as np
+import math
 
 #two-layer (one hidden layer) nn with ReLU activation and softmax loss
 class TwoLayerNN(object):
-    def __init__(self, inputsize, hiddensize, numclasses, perturb=1e-2):
+    def __init__(self, inputsize, hiddensize, numclasses, perturb=1e-4):
         """
         inputsize - dimensionality D of the data
         hiddensize - number of neurons (H) in teh hidden layer
@@ -18,10 +19,10 @@ class TwoLayerNN(object):
         #use small random number for intialization        
         self.params['W1']=perturb*np.random.randn(inputsize,hiddensize)
         #calibrate using 1/sqrt(n)
-        #self.params['W1']=np.random.randn(inputsize,hiddensize)/sqrt(inputsize)
+        #self.params['W1']=np.random.randn(inputsize,hiddensize)/math.sqrt(inputsize)
 
         #For ReLU neurions: calibrate using sqrt(2/n)
-        #self.params['W1']=np.random.randn(inputsize,hiddensize)*sqrt(2.0/inputsize)        
+        #self.params['W1']=np.random.randn(inputsize,hiddensize)*math.sqrt(2.0/inputsize)        
         
         #first layer bias vector
         self.params['b1'] = np.zeros(hiddensize)
@@ -30,7 +31,7 @@ class TwoLayerNN(object):
         #use small random number for intialization        
         self.params['W2']=perturb*np.random.randn(hiddensize,numclasses)
         #calibrate using 1/sqrt(n)
-        #self.params['W2']=np.random.randn(hiddensize,numclasses)/sqrt(hiddensize)  
+        #self.params['W2']=np.random.randn(hiddensize,numclasses)/math.sqrt(hiddensize)  
         
         #hidden layer bias vector
         self.params['b2']=np.zeros(numclasses)
