@@ -16,7 +16,6 @@ num_classes = 10#number of classifications possible
 nn2 = TwoLayerNN(input_size, hidden_size, num_classes,1e-5)
 
 #Train the network
-
 stats = nn2.train(pp.X_train, pp.y_train, pp.X_val, pp.y_val,
             num_iters=10000, batch_size=300,
             learning_rate=0.0025, learning_rate_decay=0.95,
