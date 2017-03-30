@@ -61,9 +61,16 @@ class TwoLayerNN(object):
         if y is None:
             return scores
             
+        #print "scores: ", scores
+
+        scores-=np.max(scores)
+        
+        #print "scores: ", scores
+        
         #compute the loss
         exp_scores=np.exp(scores)
         probs=exp_scores/np.sum(exp_scores, axis=1, keepdims=True)
+        #print "probs: ", probs[range(N),y]
         correct_logprobs = -np.log(probs[range(N),y])
         data_loss = np.sum(correct_logprobs)/N
         reg_loss = 0.5*(reg*np.sum(W1*W1)+reg*np.sum(W2*W2))
