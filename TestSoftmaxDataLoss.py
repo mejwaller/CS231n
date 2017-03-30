@@ -10,6 +10,7 @@ class SoftmaxTest(unittest.TestCase):
     def setUp(self):    
         self.pp=preproc()
         self.pp.preProcess()
+        self.pp.addBias()
         #setup toy W and x (augmented with b) - data from link above        
         self.xtoy=np.array([-15,22,-44,56,1])
         self.Wtoy = np.array([[0.01,-0.05,0.1,0.05,0.0],[0.7,0.2,0.05,0.16,0.2],[0.0,-0.45,-0.2,0.03,-0.3]]).transpose()

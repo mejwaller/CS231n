@@ -10,6 +10,7 @@ class myTest(unittest.TestCase):
     def setUp(self):    
         self.pp=preproc()
         self.pp.preProcess()
+        self.pp.addBias()
         xs=[13,-7,11,1]
         self.xtest=np.array(xs)
         #Ws=[[1,0,0,0],[0,1,0,0],[0,0,1,0]]
