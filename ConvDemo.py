@@ -10,3 +10,14 @@ class net:
         self.P=padding
         self.K=nfilters
         self.IV=inimg
+        
+    def setFilter(self,filter,num):#set numth filter to filter = throw FilterError if num-1 > K
+        if num > self.K:
+            raise FilterError
+        
+        
+class Error(Exception):#base class
+    pass
+    
+class FilterError(Error):
+    pass
