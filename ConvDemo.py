@@ -26,9 +26,54 @@ class net:
             
         if(num==0):
             self.W0 = filter
+            self.b0=1
             
         if(num==1):
             self.W1=filter
+            self.b1=0
+            
+    def convolve_naive(self):
+        out = np.zeros((3,3,2))
+        
+        #for i in arange(0,self.padded.shape[0],self.stride):
+        #    for j in arange(0,self.padded.shape[1], self.stride):
+        #        for k in arange(0,self.padded.shape[3]):
+        #            out[i,j,k] = 
+            
+        out[0,0,0] = np.sum(self.padded[:3,:3,:]*self.W0)+self.b0
+        out[0,1,0] = np.sum(self.padded[:3,2:5,:]*self.W0)+self.b0
+        out[0,2,0] = np.sum(self.padded[:3,4:7,:]*self.W0)+self.b0
+        out[1,0,0] = np.sum(self.padded[2:5,:3,:]*self.W0)+self.b0
+        out[1,0,0] = np.sum(self.padded[2:5,:3,:]*self.W0)+self.b0
+        out[1,1,0] = np.sum(self.padded[2:5,2:5,:]*self.W0)+self.b0
+        out[1,2,0] = np.sum(self.padded[2:5,4:7,:]*self.W0)+self.b0
+        out[2,0,0] = np.sum(self.padded[4:7,:3,:]*self.W0)+self.b0
+        out[2,1,0] = np.sum(self.padded[4:7,2:5,:]*self.W0)+self.b0
+        out[2,2,0] = np.sum(self.padded[4:7,4:7,:]*self.W0)+self.b0
+        
+        out[0,0,1] = np.sum(self.padded[:3,:3,:]*self.W1)+self.b1
+        out[0,1,1] = np.sum(self.padded[:3,2:5,:]*self.W1)+self.b1
+        out[0,2,1] = np.sum(self.padded[:3,4:7,:]*self.W1)+self.b1
+        out[1,0,1] = np.sum(self.padded[2:5,:3,:]*self.W1)+self.b1
+        out[1,0,1] = np.sum(self.padded[2:5,:3,:]*self.W1)+self.b1
+        out[1,1,1] = np.sum(self.padded[2:5,2:5,:]*self.W1)+self.b1
+        out[1,2,1] = np.sum(self.padded[2:5,4:7,:]*self.W1)+self.b1
+        out[2,0,1] = np.sum(self.padded[4:7,:3,:]*self.W1)+self.b1
+        out[2,1,1] = np.sum(self.padded[4:7,2:5,:]*self.W1)+self.b1
+        out[2,2,1] = np.sum(self.padded[4:7,4:7,:]*self.W1)+self.b1
+                
+        #print "1st area layer 0 is: ", self.padded[:3,:3,0]
+        #print "1st area layer 1 is: ", self.padded[:3,:3,1]
+        #print "1st area layer 2 is: ", self.padded[:3,:3,2]
+        #print "2nd area layer 0 is: ", self.padded[:3,2:5,0]
+        #print "2nd area layer 1 is: ", self.padded[:3,2:5,1]
+        #print "2nd area layer 2 is: ", self.padded[:3,2:5,2]              
+        
+        print "out layer 1 is: ", out[:,:,0]
+        print "out layer 2 is ", out[:,:,1]
+        
+        return out
+
         
         
         

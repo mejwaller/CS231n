@@ -16,60 +16,73 @@ class ConvDemoTest(unittest.TestCase):
         self.K=2#number of filters
         self.IV=np.zeros((5,5,3))
         self.IV[:,:,0]=np.asarray([
-                        [1,1,1,1,0],
-                        [2,2,0,0,1],
-                        [2,1,2,0,1],
-                        [0,1,1,1,1],
-                        [1,2,1,1,0]
+                        [1,2,2,0,1],
+                        [1,2,1,0,1],
+                        [1,2,0,0,1],
+                        [1,0,2,1,1],
+                        [1,2,1,2,1]
                     ])
         self.IV[:,:,1]=np.asarray([
-                        [1,2,0,0,2],
-                        [2,0,2,1,2],
-                        [1,1,0,0,0],
-                        [1,0,1,2,2],
-                        [2,0,2,0,1]
+                        [0,0,0,2,1],
+                        [2,1,2,1,2],
+                        [1,2,0,0,1],
+                        [2,1,0,0,2],
+                        [2,0,0,0,0]
                     ])
         self.IV[:,:,2]=np.asarray([
-                        [1,0,0,0,2],
-                        [1,0,2,2,2],
-                        [1,1,0,2,1],
-                        [0,1,2,1,0],
-                        [0,1,0,1,1]
+                        [1,2,1,0,1],
+                        [0,1,0,0,1],
+                        [2,1,1,1,2],
+                        [1,1,0,2,0],
+                        [1,1,0,1,1]
                     ])
 
         self.W0=np.zeros((3,3,3))
         self.W0[:,:,0] = np.asarray([
-                    [0,0,0],
-                    [-1,0,0],
-                    [-1,0,-1]
+                    [-1,1,1],
+                    [1,-1,1],
+                    [1,1,-1]
                 ])
         self.W0[:,:,1]=np.asarray([
                     [1,0,1],
-                    [-1,-1,1],
-                    [-1,1,1]
+                    [0,1,1],
+                    [1,1,0]
                 ])
         self.W0[:,:,2]=np.asarray([
-                    [1,1,0],
-                    [1,1,1],
-                    [1,-1,1]
+                    [0,0,-1],
+                    [0,-1,-1],
+                    [-1,0,0]
                 ])
                 
         self.W1=np.zeros((3,3,3))
         self.W1[:,:,0] = np.asarray([
-                    [-1,-1,1],
-                    [1,1,0],
-                    [-1,0,-1]
+                    [1,-1,0],
+                    [1,1,1],
+                    [-1,0,1]
                 ])
         self.W1[:,:,1]=np.asarray([
-                    [1,-1,-1],
-                    [-1,-1,-1],
-                    [-1,1,1],
+                    [-1,0,0],
+                    [0,1,1],
+                    [0,1,1],
                 ])
-        self.W1[:,:,0]=np.asarray([
-                    [1,0,1],
-                    [0,0,-1],
-                    [1,1,-1]
+        self.W1[:,:,2]=np.asarray([
+                    [0,0,1],
+                    [1,-1,0],
+                    [1,-1,1]
                 ])
+                
+        self.expectedOut = np.zeros((3,3,2))
+        self.expectedOut[:,:,0] = np.asarray([
+                                [0,7,4],
+                                [8,3,3],
+                                [3,5,1]
+                            ])
+        self.expectedOut[:,:,1] = np.asarray([
+                                [8,9,2],
+                                [7,6,2],
+                                [4,5,3]
+                            ])
+                                
 
         self.convnet= conv.net(self.W,self.H,self.D,self.F,self.S,self.P,self.K,self.IV)
                 
@@ -112,6 +125,11 @@ class ConvDemoTest(unittest.TestCase):
         self.failUnless(np.array_equal(self.convnet.IV,self.convnet.padded[self.convnet.P:self.convnet.padded.shape[0]-self.convnet.P,self.convnet.P:self.convnet.padded.shape[1]-self.convnet.P,:]))
         
         
+    def testOutVolNaive(self):  
+        self.convnet.setFilter(self.W0,0)
+        self.convnet.setFilter(self.W1,1)
+        output = self.convnet.convolve_naive()   
+        self.failUnless(np.array_equal(output,self.expectedOut))
         
         
         
