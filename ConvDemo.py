@@ -39,11 +39,13 @@ class net:
         #    for j in arange(0,self.padded.shape[1], self.stride):
         #        for k in arange(0,self.padded.shape[3]):
         #            out[i,j,k] = 
+        
+        for i in xrange(0,self.padded.shape[0]-self.S, self.S):
+            print i
             
         out[0,0,0] = np.sum(self.padded[:3,:3,:]*self.W0)+self.b0
         out[0,1,0] = np.sum(self.padded[:3,2:5,:]*self.W0)+self.b0
         out[0,2,0] = np.sum(self.padded[:3,4:7,:]*self.W0)+self.b0
-        out[1,0,0] = np.sum(self.padded[2:5,:3,:]*self.W0)+self.b0
         out[1,0,0] = np.sum(self.padded[2:5,:3,:]*self.W0)+self.b0
         out[1,1,0] = np.sum(self.padded[2:5,2:5,:]*self.W0)+self.b0
         out[1,2,0] = np.sum(self.padded[2:5,4:7,:]*self.W0)+self.b0
@@ -54,7 +56,6 @@ class net:
         out[0,0,1] = np.sum(self.padded[:3,:3,:]*self.W1)+self.b1
         out[0,1,1] = np.sum(self.padded[:3,2:5,:]*self.W1)+self.b1
         out[0,2,1] = np.sum(self.padded[:3,4:7,:]*self.W1)+self.b1
-        out[1,0,1] = np.sum(self.padded[2:5,:3,:]*self.W1)+self.b1
         out[1,0,1] = np.sum(self.padded[2:5,:3,:]*self.W1)+self.b1
         out[1,1,1] = np.sum(self.padded[2:5,2:5,:]*self.W1)+self.b1
         out[1,2,1] = np.sum(self.padded[2:5,4:7,:]*self.W1)+self.b1
