@@ -40,9 +40,28 @@ class net:
         #        for k in arange(0,self.padded.shape[3]):
         #            out[i,j,k] = 
         
-        for i in xrange(0,self.padded.shape[0]-self.S, self.S):
-            print i
-            
+        #out = outw,outh,f where w=width, h=height and f = numfilters
+        
+        #with f filters, width w, hieght h and padding p and stride s then we will get 
+        #out of:
+        #outw = (W-F+2P)/S + 1
+        #outh = (H-F+2P)/S + 1
+        
+        outw = (self.W - self.F + 2*self.P)/self.S + 1
+        outh = (self.H - self.F + 2*self.P)/self.S + 1
+        
+        #for i in xrange(0,self.padded.shape[0]-self.S, self.S):
+        for f in xrange(self.F):
+            for i in xrange(outw):
+                print i
+                wstep=i*self.S
+                for j in xrange(outh):
+                    print j
+                    hstep = j*self.S
+        
+        #need to caccoutn for f in W and b! To be corrected
+        out[i,j,f] = np.sum(self.padded[wstep:wstep+self.S+1,hstep:hstep+self.S+1,:]*self.W0)+self.b0
+                        
         out[0,0,0] = np.sum(self.padded[:3,:3,:]*self.W0)+self.b0
         out[0,1,0] = np.sum(self.padded[:3,2:5,:]*self.W0)+self.b0
         out[0,2,0] = np.sum(self.padded[:3,4:7,:]*self.W0)+self.b0
