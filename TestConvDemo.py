@@ -113,8 +113,8 @@ class ConvDemoTest(unittest.TestCase):
     def testSetFilter(self):        
         self.convnet.setFilter(self.W0,0)
         self.convnet.setFilter(self.W1,1)
-        self.failUnless(np.array_equal(self.W0,self.convnet.W0))
-        self.failUnless(np.array_equal(self.W1,self.convnet.W1))
+        self.failUnless(np.array_equal(self.W0,self.convnet.w[0]))
+        self.failUnless(np.array_equal(self.W1,self.convnet.w[1]))
         
     def testPadding(self):
         self.failUnless(self.convnet.padded.shape[0]==7)

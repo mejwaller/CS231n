@@ -10,6 +10,8 @@ class net:
         self.P=padding
         self.K=nfilters
         self.IV=inimg
+        self.w= [0,0]
+        self.b=[0,0]
         
         if(self.P>0):
             self.padded = np.zeros((self.IV.shape[0]+2*self.P,self.IV.shape[1]+2*self.P,self.IV.shape[2]))
@@ -25,12 +27,12 @@ class net:
             raise FilterError
             
         if(num==0):
-            self.W0 = filter
-            self.b0=1
+            self.w[0] = filter
+            self.b[0]=1
             
         if(num==1):
-            self.W1=filter
-            self.b1=0
+            self.w[1]=filter
+            self.b[1]=0
             
     def convolve_naive(self):
         out = np.zeros((3,3,2))
@@ -51,17 +53,17 @@ class net:
         outh = (self.H - self.F + 2*self.P)/self.S + 1
         
         #for i in xrange(0,self.padded.shape[0]-self.S, self.S):
-        for f in xrange(self.F):
+        for f in xrange(self.K):
             for i in xrange(outw):
-                print i
+                #print i
                 wstep=i*self.S
                 for j in xrange(outh):
-                    print j
+                    #print j
+                    print i,j,f
                     hstep = j*self.S
-        
-        #need to caccoutn for f in W and b! To be corrected
-        out[i,j,f] = np.sum(self.padded[wstep:wstep+self.S+1,hstep:hstep+self.S+1,:]*self.W0)+self.b0
-                        
+                    out[i,j,f] = np.sum(self.padded[wstep:wstep+self.S+1,hstep:hstep+self.S+1,:]*self.w[f])+self.b[f]
+
+        """                       
         out[0,0,0] = np.sum(self.padded[:3,:3,:]*self.W0)+self.b0
         out[0,1,0] = np.sum(self.padded[:3,2:5,:]*self.W0)+self.b0
         out[0,2,0] = np.sum(self.padded[:3,4:7,:]*self.W0)+self.b0
@@ -88,6 +90,7 @@ class net:
         #print "2nd area layer 0 is: ", self.padded[:3,2:5,0]
         #print "2nd area layer 1 is: ", self.padded[:3,2:5,1]
         #print "2nd area layer 2 is: ", self.padded[:3,2:5,2]              
+        """
         
         print "out layer 1 is: ", out[:,:,0]
         print "out layer 2 is ", out[:,:,1]
