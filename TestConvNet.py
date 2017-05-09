@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import unittest
 import layers
 import gradient_check as gc
+import layer_utils as lu
 
 
 class ConvNetTest(unittest.TestCase):
@@ -41,15 +42,17 @@ class ConvNetTest(unittest.TestCase):
                           [ 0.38526316,  0.4       ]]]])
                            
     def testNaiveFWdPass(self):
+        print 'Testing conv_forward_naive'
         conv_param = {'stride':2,'pad':1}
         out,_ = layers.conv_forward_naive(self.x,self.w,self.b,conv_param)
         #print out
         #print self.naivefwd_correct_out
-        self.failUnless(np.allclose(out,self.naivefwd_correct_out))
-        print 'Testing conv_forward_naive'
+        self.failUnless(np.allclose(out,self.naivefwd_correct_out))    
+            
         print 'difference: ', gc.rel_error(out, self.naivefwd_correct_out)
         
     def testNaiveBackPass(self):
+        print 'Testing conv_backward_naive function'
         x = np.random.randn(4,3,5,5)
         w = np.random.randn(2,3,3,3)
         b = np.random.randn(2,)
@@ -61,9 +64,8 @@ class ConvNetTest(unittest.TestCase):
         db_num = gc.eval_numerical_gradient_array(lambda b: layers.conv_forward_naive(x,w,b,conv_param)[0], b, dout)
         
         out, cache = layers.conv_forward_naive(x,w,b,conv_param)
-        dx, dw, db = layers.conv_backward_naive(dout, cache)
+        dx, dw, db = layers.conv_backward_naive(dout, cache)        
         
-        print 'Testing conv_backward_naive function'
         print 'dx error: ', gc.rel_error(dx, dx_num)
         print 'dw error: ', gc.rel_error(dw, dw_num)
         print 'db error: ', gc.rel_error(db, db_num)
@@ -74,18 +76,19 @@ class ConvNetTest(unittest.TestCase):
         self.failUnless(np.allclose(db, db_num))
         
     def testMaxPoolNaiveFwd(self):
+        print 'Testing max_pool_forward_naive function:'
         x_shape=(2,3,4,4)
         x = np.linspace(-0.3,0.4,num=np.prod(x_shape)).reshape(x_shape)
         pool_param ={'pool_width':2, 'pool_height':2, 'stride':2}
         
-        out,_ = layers.max_pool_forward_naive(x, pool_param)
+        out,_ = layers.max_pool_forward_naive(x, pool_param)        
         
-        print 'Testing max_pool_forward_naive function:'
         print 'difference:', gc.rel_error(out, self.maxpoolfwd_correct_out)
         
         self.failUnless(np.allclose(out,self.maxpoolfwd_correct_out))
         
     def testMaxPoolNaiveBack(self):
+        print 'Testing max_pool_backward_naive function:'
         x = np.random.randn(3,2,8,8)
         dout = np.random.randn(3,2,4,4)
         pool_param = {'pool_height': 2, 'pool_width': 2, 'stride': 2}
@@ -93,12 +96,66 @@ class ConvNetTest(unittest.TestCase):
         dx_num = gc.eval_numerical_gradient_array(lambda x: layers.max_pool_forward_naive(x, pool_param)[0], x, dout)
         out, cache = layers.max_pool_forward_naive(x, pool_param)
         
-        dx = layers.max_pool_backward_naive(dout, cache)
+        dx = layers.max_pool_backward_naive(dout, cache)        
         
-        print 'Testing max_pool_backward_naive function:'
         print 'dx error: ', gc.rel_error(dx, dx_num)
         
         self.failUnless(np.allclose(dx,dx_num))
+        
+    def testConvReluPool(self):
+        print 'Testing conv_relu_pool'
+        x = np.random.randn(2,3,16,16)
+        w = np.random.randn(3,3,3,3)
+        b = np.random.randn(3,)
+        dout = np.random.randn(2,3,8,8)
+        conv_param = {'stride': 1, 'pad': 1}
+        pool_param = {'pool_height': 2, 'pool_width': 2, 'stride': 2}
+        
+        out, cache = lu.conv_relu_pool_forward(x,w,b,conv_param,pool_param)
+        dx, dw,db = lu.conv_relu_pool_backward(dout, cache)
+        
+        dx_num = gc.eval_numerical_gradient_array(lambda x: lu.conv_relu_pool_forward(x,w,b,conv_param, pool_param)[0], x, dout)
+        dw_num = gc.eval_numerical_gradient_array(lambda w: lu.conv_relu_pool_forward(x,w,b,conv_param, pool_param)[0], w, dout)
+        db_num = gc.eval_numerical_gradient_array(lambda b: lu.conv_relu_pool_forward(x,w,b,conv_param, pool_param)[0], b, dout)
+        
+        print 'dx error:', gc.rel_error(dx_num, dx)
+        print 'dw error:', gc.rel_error(dw_num, dw)
+        print 'db error:', gc.rel_error(db_num, db)
+        
+        self.failUnless(np.allclose(dx, dx_num))
+        self.failUnless(np.allclose(dw, dw_num))
+        self.failUnless(np.allclose(db, db_num))
+        
+    def testConvRelu(self):
+        print 'Testing conv_relu:'
+        x = np.random.randn(2,3,8,8)
+        w = np.random.randn(3,3,3,3)
+        b = np.random.randn(3,)
+        dout = np.random.randn(2,3,8,8)
+        conv_param = {'stride': 1, 'pad': 1}
+        
+        out, cache = lu.conv_relu_forward(x,w,b,conv_param)
+        dx, dw, db = lu.conv_relu_backward(dout,cache)
+        
+        dx_num = gc.eval_numerical_gradient_array(lambda x: lu.conv_relu_forward(x,w,b,conv_param)[0],x,dout)
+        dw_num = gc.eval_numerical_gradient_array(lambda w: lu.conv_relu_forward(x,w,b,conv_param)[0],w,dout)
+        db_num = gc.eval_numerical_gradient_array(lambda b: lu.conv_relu_forward(x,w,b,conv_param)[0],b,dout)        
+        
+        print 'dx error:', gc.rel_error(dx_num, dx)
+        print 'dw error:', gc.rel_error(dw_num, dw)
+        print 'db error:', gc.rel_error(db_num, db)
+        
+        self.failUnless(np.allclose(dx, dx_num))
+        self.failUnless(np.allclose(dw, dw_num))
+        self.failUnless(np.allclose(db, db_num))
+        
+        
+        
+        
+        
+        
+        
+        
         
         
 if __name__ == '__main__': unittest.main()     
