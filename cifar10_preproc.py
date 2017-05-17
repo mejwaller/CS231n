@@ -126,12 +126,13 @@ class PreProcCifar10:
         print 'Test data shape: ', self.X_test.shape
         print 'Test labels shape: ', self.y_test.shape
         
+        #NOTE: Dunno why the below was reshaped (what for) - screws up conv net training
         # Preprocessing: reshape the image data into rows
-        self.X_train = np.reshape(self.X_train, (self.X_train.shape[0], -1))
-        self.X_val = np.reshape(self.X_val, (self.X_val.shape[0], -1))
-        self.X_test = np.reshape(self.X_test, (self.X_test.shape[0], -1))
-        self.X_dev = np.reshape(self.X_dev, (self.X_dev.shape[0], -1))
-        self.fixedX_dev = np.reshape(self.fixedX_dev, (self.fixedX_dev.shape[0], -1))
+        #self.X_train = np.reshape(self.X_train, (self.X_train.shape[0], -1))
+        #self.X_val = np.reshape(self.X_val, (self.X_val.shape[0], -1))
+        #self.X_test = np.reshape(self.X_test, (self.X_test.shape[0], -1))
+        #self.X_dev = np.reshape(self.X_dev, (self.X_dev.shape[0], -1))
+        #self.fixedX_dev = np.reshape(self.fixedX_dev, (self.fixedX_dev.shape[0], -1))
         
         # As a sanity check, print out the shapes of the data
         print 'Training data shape: ', self.X_train.shape

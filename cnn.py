@@ -170,7 +170,7 @@ class ThreeLayerConvNet(object):
         # TODO: Implement the forward pass for the three-layer convolutional net,  #
         # computing the class scores for X and storing them in the scores          #
         # variable.                                                                #
-        #######################################################################
+        #######################################################################        
 
         # Forward into the conv layer
         x = X
