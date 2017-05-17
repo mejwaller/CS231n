@@ -2,8 +2,12 @@ import numpy as np
 cimport numpy as np
 cimport cython
 
-DTYPE = np.float64
-ctypedef np.float64_t DTYPE_t
+#DTYPE = np.float64
+#ctypedef np.float64_t DTYPE_t
+
+ctypedef fused DTYPE_t:
+    np.float32_t
+    np.float64_t
 
 def im2col_cython(np.ndarray[DTYPE_t, ndim=4] x, int field_height,
                   int field_width, int padding, int stride):
@@ -20,7 +24,8 @@ def im2col_cython(np.ndarray[DTYPE_t, ndim=4] x, int field_height,
             ((0, 0), (0, 0), (p, p), (p, p)), mode='constant')
 
     cdef np.ndarray[DTYPE_t, ndim=2] cols = np.zeros(
-            (C * field_height * field_width, N * HH * WW))
+            (C * field_height * field_width, N * HH * WW),
+            dtype=x.dtype)
 
     # Moving the inner loop to a C function with no bounds checking works, but does
     # not seem to help performance in any measurable way.
@@ -63,11 +68,11 @@ cdef int im2col_cython_inner(np.ndarray[DTYPE_t, ndim=2] cols,
 
 def col2im_cython(np.ndarray[DTYPE_t, ndim=2] cols, int N, int C, int H, int W,
                   int field_height, int field_width, int padding, int stride):
-    cdef np.ndarray x = np.empty((N, C, H, W), dtype=DTYPE)
+    cdef np.ndarray x = np.empty((N, C, H, W), dtype=cols.dtype)
     cdef int HH = (H + 2 * padding - field_height) / stride + 1
     cdef int WW = (W + 2 * padding - field_width) / stride + 1
     cdef np.ndarray[DTYPE_t, ndim=4] x_padded = np.zeros((N, C, H + 2 * padding, W + 2 * padding),
-                                        dtype=DTYPE)
+                                        dtype=cols.dtype)
 
     # Moving the inner loop to a C-function with no bounds checking improves
     # performance quite a bit for col2im.

@@ -1,7 +1,7 @@
 import numpy as np
 
 import layers
-#from cs231n.fast_layers import *
+from fast_layers import *
 import layer_utils as lu
 
 
