@@ -551,6 +551,117 @@ def max_pool_backward_naive(dout, cache):
 
   return dx
 
+def spatial_batchnorm_forward(x, gamma, beta, bn_param):
+    """
+    Computes the forward pass for spatial batch normalization.
+    Inputs:
+    - x: Input data of shape (N, C, H, W)
+    - gamma: Scale parameter, of shape (C,)
+    - beta: Shift parameter, of shape (C,)
+    - bn_param: Dictionary with the following keys:
+      - mode: 'train' or 'test'; required
+      - eps: Constant for numeric stability
+      - momentum: Constant for running mean / variance. momentum=0 means that
+        old information is discarded completely at every time step, while
+        momentum=1 means that new information is never incorporated. The
+        default of momentum=0.9 should work well in most situations.
+      - running_mean: Array of shape (D,) giving running mean of features
+      - running_var Array of shape (D,) giving running variance of features
+    Returns a tuple of:
+    - out: Output data, of shape (N, C, H, W)
+    - cache: Values needed for the backward pass
+    """
+    out, cache = None, None
+
+    ##########################################################################
+    # TODO: Implement the forward pass for spatial batch normalization.         #
+    #                                                                           #
+    # HINT: You can implement spatial batch normalization using the vanilla     #
+    # version of batch normalization defined above. Your implementation should  #
+    # be very short; ours is less than five lines.                              #
+    ##########################################################################
+
+    N, C, H, W = x.shape
+    mode = bn_param['mode']
+    eps = bn_param.get('eps', 1e-5)
+    momentum = bn_param.get('momentum', 0.9)
+
+    running_mean = bn_param.get('running_mean', np.zeros(C, dtype=x.dtype))
+    running_var = bn_param.get('running_var', np.zeros(C, dtype=x.dtype))
+
+    if mode == 'train':
+        # Step 1 , calcul the average for each channel
+        mu = (1. / (N * H * W) * np.sum(x, axis=(0, 2, 3))).reshape(1, C, 1, 1)
+        var = (1. / (N * H * W) * np.sum((x - mu)**2,
+                                         axis=(0, 2, 3))).reshape(1, C, 1, 1)
+        xhat = (x - mu) / (np.sqrt(eps + var))
+        out = gamma.reshape(1, C, 1, 1) * xhat + beta.reshape(1, C, 1, 1)
+
+        running_mean = momentum * running_mean + \
+            (1.0 - momentum) * np.squeeze(mu)
+        running_var = momentum * running_var + \
+            (1.0 - momentum) * np.squeeze(var)
+
+        cache = (mu, var, x, xhat, gamma, beta, bn_param)
+
+        # Store the updated running means back into bn_param
+        bn_param['running_mean'] = running_mean
+        bn_param['running_var'] = running_var
+
+    elif mode == 'test':
+        mu = running_mean.reshape(1, C, 1, 1)
+        var = running_var.reshape(1, C, 1, 1)
+
+        xhat = (x - mu) / (np.sqrt(eps + var))
+        out = gamma.reshape(1, C, 1, 1) * xhat + beta.reshape(1, C, 1, 1)
+        cache = (mu, var, x, xhat, gamma, beta, bn_param)
+
+    else:
+        raise ValueError('Invalid forward batchnorm mode "%s"' % mode)
+
+    return out, cache
+
+
+def spatial_batchnorm_backward(dout, cache):
+    """
+    Computes the backward pass for spatial batch normalization.
+    Inputs:
+    - dout: Upstream derivatives, of shape (N, C, H, W)
+    - cache: Values from the forward pass
+    Returns a tuple of:
+    - dx: Gradient with respect to inputs, of shape (N, C, H, W)
+    - dgamma: Gradient with respect to scale parameter, of shape (C,)
+    - dbeta: Gradient with respect to shift parameter, of shape (C,)
+    """
+    dx, dgamma, dbeta = None, None, None
+
+    ##########################################################################
+    # TODO: Implement the backward pass for spatial batch normalization.        #
+    #                                                                           #
+    # HINT: You can implement spatieal batch normalization using the vanilla     #
+    # version of batch normalization defined above. Your implementation should  #
+    # be very short; ours is less than five lines.                              #
+    ##########################################################################
+
+    mu, var, x, xhat, gamma, beta, bn_param = cache
+    N, C, H, W = x.shape
+    mode = bn_param['mode']
+    eps = bn_param.get('eps', 1e-5)
+
+    gamma = gamma.reshape(1, C, 1, 1)
+    beta = beta.reshape(1, C, 1, 1)
+
+    dbeta = np.sum(dout, axis=(0, 2, 3))
+    dgamma = np.sum(dout * xhat, axis=(0, 2, 3))
+
+    Nt = N * H * W
+    dx = (1. / Nt) * gamma * (var + eps)**(-1. / 2.) * (
+        Nt * dout
+        - np.sum(dout, axis=(0, 2, 3)).reshape(1, C, 1, 1)
+        - (x - mu) * (var + eps)**(-1.0) * np.sum(dout * (x - mu), axis=(0, 2, 3)).reshape(1, C, 1, 1))
+
+    return dx, dgamma, dbeta
+
 
 def svm_loss(x, y):
   """
