@@ -223,7 +223,7 @@ def conv_norm_relu_pool_forward(x, w, b, conv_param, pool_param, gamma, beta, bn
     - cache: Object to give to the backward pass
     """
     conv, conv_cache = conv_forward_fast(x, w, b, conv_param)
-    norm, norm_cache = spatial_batchnorm_forward(conv, gamma, beta, bn_param)
+    norm, norm_cache = layers.spatial_batchnorm_forward(conv, gamma, beta, bn_param)
     relu, relu_cache = relu_forward(norm)
     out, pool_cache = max_pool_forward_fast(relu, pool_param)
 
