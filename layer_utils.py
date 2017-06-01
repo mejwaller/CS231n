@@ -88,7 +88,7 @@ def affine_relu_backward(dout, cache):
   dx, dw, db = affine_backward(da, fc_cache)
   return dx, dw, db
   
-  def affine_norm_relu_forward(x, w, b, gamma, beta, bn_param):
+def affine_norm_relu_forward(x, w, b, gamma, beta, bn_param):
     """
     Convenience layer that perorms an affine transform followed by a ReLU
     Inputs:
@@ -223,7 +223,7 @@ def conv_norm_relu_pool_forward(x, w, b, conv_param, pool_param, gamma, beta, bn
     - cache: Object to give to the backward pass
     """
     conv, conv_cache = conv_forward_fast(x, w, b, conv_param)
-    norm, norm_cache = layers.spatial_batchnorm_forward(conv, gamma, beta, bn_param)
+    norm, norm_cache = spatial_batchnorm_forward(conv, gamma, beta, bn_param)
     relu, relu_cache = relu_forward(norm)
     out, pool_cache = max_pool_forward_fast(relu, pool_param)
 
