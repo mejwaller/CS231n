@@ -4,6 +4,7 @@ import gradient_check as gc
 from cifar10_preproc import PreProcCifar10
 import solver as s
 import matplotlib.pyplot as plt
+from vis_utils import visualize_grid
 
 class runner:
     def lossSanityCheck(self):
@@ -81,14 +82,50 @@ class runner:
         plt.xlabel('epoch')
         plt.ylabel('accuracy')
         plt.show()
-        
-        
-        
-                            
-                    
+
+    def oneEpoch(self):
+        pp=PreProcCifar10()
+        pp.preProcess()
+
+        data = {
+            'X_train': pp.X_train,
+            'y_train': pp.y_train,
+            'X_val': pp.X_val,
+            'y_val': pp.y_val
+        }
+
+        model = cnn.ThreeLayerConvNet(weight_scale=0.001, hidden_dim=500, reg = 0.001)
+
+        solver = s.Solver(model, data,
+                        num_epochs=1, batch_size=50, update_rule='adam',
+                        optim_config={
+                            'learning_rate': 1e-3,
+                        }, verbose=True, print_every=20)
+        solver.train()
+
+        print 'Solving finished, plotting...'
+        plt.subplot(2, 1, 1)
+        plt.plot(solver.loss_history, 'o')
+        plt.xlabel('iteration')
+        plt.ylabel('loss')
+        plt.subplot(2, 1, 2)
+        plt.plot(solver.train_acc_history, '-o')
+        plt.plot(solver.val_acc_history, '-o')
+        plt.legend(['train', 'val'], loc='upper left')
+        plt.xlabel('epoch')
+        plt.ylabel('accuracy')
+        plt.show()
+
+
+        grid = visualize_grid(model.params['W1'].transpose(0,2,3,1))
+        plt.imshow(grid.astype('uint8'))
+        plt.axis('off')
+        plt.gcf().set_size_inches(5,5)
+        plt.show()
         
         
 runit = runner()
-#runit.lossSanityCheck()
-#runit.gradCheck()
+runit.lossSanityCheck()
+runit.gradCheck()
 runit.smallFit()
+runit.oneEpoch()
